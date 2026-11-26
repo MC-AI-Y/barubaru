@@ -1,0 +1,16 @@
+{
+  "name": "whcontrol-e2e",
+  "private": true,
+  "type": "module",
+  "description": "Uji e2e WHControl dengan Google tiruan (tanpa data dan akun asli).",
+  "scripts": {
+    "fixtures": "node make-fixtures.mjs",
+    "build": "node build.mjs",
+    "test": "node build.mjs && node run.mjs",
+    "serve": "node build.mjs && node run.mjs --serve"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0",
+    "playwright": "^1.49.0"
+  }
+}

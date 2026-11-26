@@ -1,0 +1,52 @@
+const SHOTS = process.env.E2E_SHOTS || require('path').join(__dirname, '..', 'shots');
+require('fs').mkdirSync(SHOTS, { recursive: true });
+const B_ENV = process.env.E2E_BASE || 'http://127.0.0.1:4400';
+const { chromium } = require('playwright');
+const B = B_ENV;
+(async () => {
+  const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, permissions: ['geolocation', 'camera'], geolocation: { latitude: -6.48, longitude: 106.85, accuracy: 12 } });
+  const p = await ctx.newPage(); const errs = []; p.on('pageerror', e => errs.push(e.message));
+  await p.route('https://api.bigdatacloud.net/**', r => r.fulfill({ json: { locality: 'X', city: 'Y', principalSubdivision: 'Z' } }));
+  await p.goto(B);
+  await p.getByRole('button', { name: 'Login', exact: true }).click();
+  await p.getByLabel(/^Subcont/).fill('cv uji kreasi nusantara');
+  await p.locator('input[name=password]').fill('Uji12345');
+  await p.getByRole('button', { name: 'Masuk', exact: true }).click();
+  await p.locator('button[aria-label^=\"Visit\"]').click(); await p.getByRole('button', { name: 'Mulai Laporan' }).click();
+  await p.getByRole('button', { name: 'Ambil Selfie' }).click();
+  await p.waitForFunction(() => { const b = [...document.querySelectorAll('button[aria-label^="Ambil"]')].pop(); return b && !b.disabled; }, null, { timeout: 15000 });
+  await p.locator('button[aria-label^="Ambil"]').last().click();
+  await p.getByRole('button', { name: 'Gunakan Foto' }).click();
+  await p.getByRole('button', { name: 'Lanjut' }).click();
+  await p.getByLabel(/^Kota gudang/).selectOption({ label: 'Manado' });
+  await p.getByLabel('Warehouse Name').fill('Gudang Uji Navigasi');
+  // 1) Logo YOFC → Beranda (di tengah isi Data Gudang)
+  await p.getByRole('button', { name: 'Kembali ke Beranda', exact: true }).click();
+  await p.getByRole('button', { name: 'Lanjutkan Pengisian Form' }).waitFor();
+  console.log('logo → Beranda: ya |', (await p.locator('[class*=HubScreen_todoItem]', { hasText: 'Laporan Visit' }).first().innerText()).replace(/\n/g, ' / '));
+  await p.screenshot({ path: require('path').join(SHOTS, 'nav-home.png') });
+  await p.getByRole('button', { name: 'Lanjutkan Pengisian Form' }).click();
+  await p.getByLabel('Warehouse Name').waitFor();
+  console.log('lanjut → Data Gudang, isian tetap:', await p.getByLabel('Warehouse Name').inputValue());
+  for (const [l, v] of [['PIC Subcont', 'A'], ['YOFC SPV', 'B'], ['YOFC PM/RPM', 'C']]) await p.getByLabel(l).fill(v);
+  await p.getByRole('button', { name: 'Lanjut' }).click();
+  await p.getByRole('combobox', { name: 'Material', exact: true }).selectOption('CABLE-48');
+  await p.getByLabel('Quantity').fill('1500');
+  await p.getByLabel('Notes').fill('catatan cepat');
+  // 2) Nama subcont (kanan atas) → Beranda (di tengah isi Material)
+  await p.getByRole('button', { name: /CV UJI KREASI NUSANTARA, kembali ke Beranda/ }).click();
+  await p.getByRole('button', { name: 'Lanjutkan Pengisian Form' }).waitFor();
+  console.log('nama subcont → Beranda: ya |', (await p.locator('[class*=HubScreen_todoItem]', { hasText: 'Laporan Visit' }).first().innerText()).replace(/\n/g, ' / '));
+  await p.getByRole('button', { name: 'Lanjutkan Pengisian Form' }).click();
+  await p.getByLabel('Quantity').waitFor();
+  console.log('lanjut → Material, isian tetap:', await p.getByRole('combobox', { name: 'Material', exact: true }).inputValue(), await p.getByLabel('Quantity').inputValue(), await p.getByRole('combobox', { name: 'Satuan', exact: true }).inputValue());
+  // 3) Setelah reload pun tetap bisa dilanjutkan
+  const dump = await p.evaluate(() => new Promise((res) => { const r = indexedDB.open('whcontrol'); r.onsuccess = () => { const db = r.result; const names = [...db.objectStoreNames]; const tx = db.transaction(names, 'readonly'); const out = {}; let left = names.length; names.forEach((n) => { const q = tx.objectStore(n).getAll(); q.onsuccess = () => { out[n] = q.result.map((x) => (x && x.form ? { step: x.step, q: x.form.quantity, mat: x.form.material } : '...')); if (!--left) res(out); }; }); }; r.onerror = () => res('err'); }));
+  console.log('IDB sebelum reload:', JSON.stringify(dump).slice(0, 300));
+  await p.reload(); await p.getByRole('button', { name: 'Lanjutkan Pengisian Form' }).click();
+  await p.getByLabel('Quantity').waitFor();
+  console.log('setelah reload, isian tetap:', await p.getByLabel('Quantity').inputValue(), '|', await p.getByLabel('Notes').inputValue());
+  console.log('error JS:', errs.length ? errs : 'tidak ada');
+  await browser.close();
+})().catch(e => { console.error('GAGAL', e.message); process.exit(1); });

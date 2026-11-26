@@ -1,0 +1,97 @@
+const { chromium } = require('playwright');
+const { B, log, shot, login, cards, kpis, state, verifyFirst } = require('./_lib.cjs');
+
+(async () => {
+  const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream'] });
+  const s = await login(browser, 'cv uji kreasi nusantara', 'Uji12345', { width: 390, height: 844 });
+  await s.locator('button[aria-label^="Dashboard"]').click();
+  await s.locator('h2', { hasText: 'Tabel detail' }).waitFor({ timeout: 20000 });
+  log('Dashboard subcont sebelum:', await s.locator('h2', { hasText: 'Tabel detail' }).innerText());
+  log('In terverifikasi (API):', (await (await s.request.get(B + '/api/dashboard')).json()).rows.reduce((t, r) => t + r.inVerified, 0));
+  await s.getByRole('button', { name: 'Beranda', exact: true }).click();
+  await s.locator('button[aria-label^="DO"]').click();
+  const n1 = await verifyFirst(s);
+  await s.waitForTimeout(800);
+  const n2 = await verifyFirst(s, { name: 'Andi', phone: '081300000000' });
+  log('subcont mengirim DO:', n1, n2);
+  await s.getByRole('button', { name: 'Beranda', exact: true }).click();
+  await s.locator('button[aria-label^="BOQ"]').click();
+  const b1 = await verifyFirst(s, { name: 'Sari', phone: '081500000000', boq: 'FO CUT/VANDALISME' });
+  log('subcont mengirim BOQ:', b1, '| toast:', await s.getByText(/terkirim\. Status: FO CUT\/VANDALISME/).first().innerText().catch(() => 'TIDAK ADA'));
+
+  const a = await login(browser, 'admin', 'Admin12345', { width: 1366, height: 900 });
+  await a.getByText(/DO menunggu persetujuan admin/).waitFor({ timeout: 10000 });
+  log('admin todo:', (await a.locator('[class*=HubScreen_todoMain]').allInnerTexts()).join(' | '));
+  await a.locator('button[aria-label^="DO"]').click();
+  await cards(a).first().waitFor();
+  log('tab admin:', (await a.getByRole('tab').allInnerTexts()).join(' | '));
+  await cards(a).filter({ hasText: n1 }).click();
+  await a.getByText('Keputusan admin', { exact: true }).waitFor();
+  log('Setujui nonaktif sebelum foto dibuka:', await a.getByRole('button', { name: 'Setujui', exact: true }).isDisabled());
+  log('PIC tampil ke admin:', await a.getByText('PIC yang meminta verifikasi: Budi Penerima (081234567890).').count());
+  await a.getByRole('button', { name: 'Lihat 2 Foto Bukti' }).click();
+  await a.waitForFunction(() => { const i = [...document.querySelectorAll('[class*=lightbox] img')]; return i.length === 2 && i.every((x) => x.complete && x.naturalWidth > 0); }, null, { timeout: 10000 });
+  log('lightbox admin:', (await a.locator('[class*=lightbox] figcaption').allInnerTexts()).join(' + '));
+  log('kotak keputusan di bawah detail:', (await a.locator('[class*=verifyBottom]').boundingBox()).y > (await a.getByRole('dialog').locator('table').first().boundingBox()).y);
+  await a.waitForTimeout(300); await a.screenshot({ path: shot('a-lightbox.png') });
+  await a.getByRole('button', { name: 'Tutup foto' }).click();
+  await a.waitForTimeout(300); await a.screenshot({ path: shot('a-decide.png') });
+  await a.getByRole('button', { name: 'Setujui', exact: true }).click();
+  await a.getByRole('alertdialog').getByRole('button', { name: 'Setujui' }).click();
+  await a.getByText(/: APPROVED\. SMDT diperbarui/).waitFor({ timeout: 20000 });
+  log('toast setuju:', await a.getByText(/: APPROVED\. SMDT diperbarui/).innerText());
+  let orders = await state('/__orders');
+  const H = orders.do[1];
+  const col = (n) => H.indexOf(n);
+  log('sheet DO', n1, 'Verified =', [...new Set(orders.do.filter((r) => r[col('DO NUMBER')] === n1).map((r) => r[col('Verified')]))].join(','));
+  let st = await state('/__verify');
+  log('catatan DO', n1, ':', st.tabs.DO.find((r) => r[2] === n1)[6]);
+
+  await cards(a).filter({ hasText: n2 }).click();
+  await a.getByRole('button', { name: 'Tolak…' }).click();
+  log('Tolak nonaktif tanpa alasan:', await a.getByRole('button', { name: 'Tolak', exact: true }).isDisabled());
+  await a.getByLabel('Alasan penolakan (wajib)').fill('Surat jalan tidak terbaca');
+  await a.getByRole('button', { name: 'Tolak', exact: true }).click();
+  await a.getByText(/: NEED CHECK\. Dikembalikan/).waitFor({ timeout: 10000 });
+  orders = await state('/__orders');
+  log('sheet DO', n2, 'Verified =', [...new Set(orders.do.filter((r) => r[col('DO NUMBER')] === n2).map((r) => r[col('Verified')]))].join(','));
+  const again = await a.request.post(B + '/api/admin/decide', { headers: { Origin: B }, data: { kind: 'do', key: n1.toLowerCase(), decision: 'approve' } });
+  log('setujui ulang:', again.status(), (await again.json()).error);
+
+  // BOQ v5.3: status dipilih subcont, admin hanya melihat (tanpa Keputusan admin)
+  await a.getByRole('button', { name: 'Beranda', exact: true }).click();
+  await a.locator('button[aria-label^="BOQ"]').click();
+  await cards(a).first().waitFor();
+  log('tab admin BOQ:', (await a.getByRole('tab').allInnerTexts()).join(' | '));
+  await a.getByRole('tab', { name: 'Terverifikasi' }).click();
+  await a.waitForTimeout(800);
+  await cards(a).filter({ hasText: b1 }).first().click();
+  await a.getByRole('dialog').locator('table').waitFor();
+  log('admin BOQ: kotak Keputusan admin =', await a.getByText('Keputusan admin', { exact: true }).count(), '| chip:', await a.getByRole('dialog').locator('[class*=chip]').first().innerText());
+  await a.getByRole('button', { name: 'Tutup panel' }).click();
+  const boqDecide = await a.request.post(B + '/api/admin/decide', { headers: { Origin: B }, data: { kind: 'boq', key: 'x', decision: 'approve' } });
+  log('API keputusan BOQ:', boqDecide.status(), (await boqDecide.json()).error);
+  orders = await state('/__orders');
+  const BH = orders.boq[0];
+  const brows = orders.boq.filter((r) => r[BH.indexOf('Site Name')] === b1);
+  log('sheet BOQ', b1, 'Verified =', [...new Set(brows.map((r) => r[BH.indexOf('Verified')]))].join(','), '| PIC =', brows[0][BH.indexOf('PIC Name')]);
+  log('foto BOQ di folder Evidence BOQ:', (await state('/__state')).files.filter((f) => f.parents[0] === 'FOLDER_EVBOQ').length);
+
+  // Subcont melihat hasil
+  await s.getByRole('button', { name: 'Beranda', exact: true }).click();
+  await s.locator('button[aria-label^="DO"]').click();
+  await s.getByRole('button', { name: 'Muat ulang' }).click();
+  await s.waitForTimeout(900);
+  log('subcont: DO ditolak kembali, chip:', await cards(s).filter({ hasText: n2 }).locator('[class*=chip]').last().innerText());
+  await s.getByRole('tab', { name: 'APPROVED' }).click();
+  await s.waitForTimeout(900);
+  log('subcont: tab APPROVED berisi', n1, ':', await cards(s).filter({ hasText: n1 }).count());
+  await s.getByRole('button', { name: 'Beranda', exact: true }).click();
+  await s.locator('button[aria-label^="Dashboard"]').click();
+  await s.getByRole('button', { name: 'Muat ulang' }).click();
+  await s.waitForTimeout(1500);
+  log('Dashboard subcont sesudah:', await s.locator('h2', { hasText: 'Tabel detail' }).innerText());
+  log('In terverifikasi sesudah (API):', (await (await s.request.get(B + '/api/dashboard?refresh=1')).json()).rows.reduce((t, r) => t + r.inVerified, 0));
+  log('error JS:', [...s.errs, ...a.errs].length ? [...s.errs, ...a.errs] : 'tidak ada');
+  await browser.close();
+})().catch((e) => { console.error('GAGAL', e.message); process.exit(1); });
