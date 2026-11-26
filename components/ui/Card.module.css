@@ -1,0 +1,41 @@
+.card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.padded {
+  padding: var(--space-5);
+}
+
+@media (min-width: 768px) {
+  .padded {
+    padding: var(--space-6);
+  }
+}
+
+.accent::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 4px;
+}
+
+.accent-pink::before {
+  background: var(--brand-pink);
+}
+.accent-orange::before {
+  background: var(--brand-orange);
+}
+.accent-green::before {
+  background: var(--brand-green);
+}
+.accent-blue::before {
+  background: var(--brand-blue);
+}
+.accent-brand::before {
+  background: var(--brand-gradient);
+}

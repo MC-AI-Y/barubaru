@@ -1,0 +1,292 @@
+.overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  background: #05070b;
+  color: #fff;
+  animation: in 200ms ease;
+}
+
+.topBar {
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  padding-top: max(var(--space-2), env(safe-area-inset-top));
+}
+
+.title {
+  flex: 1;
+  text-align: center;
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-md);
+}
+
+.spacer {
+  width: 44px;
+}
+
+.iconBtn {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  cursor: pointer;
+}
+
+.iconBtnOn {
+  background: #ffd43b;
+  color: #1a1a1a;
+}
+
+.focusRing {
+  position: absolute;
+  width: 72px;
+  height: 72px;
+  margin: -36px 0 0 -36px;
+  border: 2px solid #ffd43b;
+  border-radius: 12px;
+  pointer-events: none;
+  animation: focus-pulse 1.2s ease-out forwards;
+}
+
+@keyframes focus-pulse {
+  0% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  20% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+.video,
+.previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.mirror {
+  transform: scaleX(-1);
+}
+
+.hidden {
+  display: none;
+}
+
+.center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  text-align: center;
+  font-size: var(--fs-sm);
+}
+
+.dim {
+  background: rgba(5, 7, 11, 0.6);
+}
+
+.card {
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border-radius: var(--radius-lg);
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--text);
+}
+
+.cardActions {
+  display: flex;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.cardActions > * {
+  flex: 1;
+}
+
+.rotate {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 20px;
+  border: 3px solid #fff;
+  animation: turn 1.6s var(--ease-out) infinite;
+}
+
+.rotateText {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+}
+
+.rotateHint {
+  max-width: 300px;
+  opacity: 0.85;
+}
+
+.bottomBar {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: max(var(--space-4), env(safe-area-inset-bottom));
+}
+
+.status {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.14);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.chipOk {
+  background: rgba(128, 172, 21, 0.35);
+}
+
+.shutter {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  background: transparent;
+  padding: 5px;
+  cursor: pointer;
+  transition: transform var(--dur-fast) var(--ease-out), opacity var(--dur-fast) ease;
+}
+
+.shutter span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #fff;
+}
+
+.shutter:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.shutter:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.helper {
+  font-size: var(--fs-xs);
+  opacity: 0.7;
+}
+
+.previewActions {
+  display: flex;
+  gap: var(--space-3);
+  width: 100%;
+  max-width: 480px;
+}
+
+.previewActions > * {
+  flex: 1;
+}
+
+/* Landscape di HP: tombol di sisi kanan agar foto tetap besar. */
+@media (orientation: landscape) and (max-height: 520px) {
+  .overlay {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .topBar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    background: transparent;
+  }
+
+  .title,
+  .spacer {
+    display: none;
+  }
+
+  .stage {
+    height: 100%;
+  }
+
+  .bottomBar {
+    width: 132px;
+    height: 100%;
+    justify-content: center;
+    padding-right: max(var(--space-3), env(safe-area-inset-right));
+  }
+
+  .status {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .previewActions {
+    flex-direction: column;
+  }
+}
+
+@keyframes in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes turn {
+  0%,
+  20% {
+    transform: rotate(0deg);
+  }
+  60%,
+  100% {
+    transform: rotate(-90deg);
+  }
+}

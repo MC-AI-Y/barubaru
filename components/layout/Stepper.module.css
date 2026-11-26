@@ -1,0 +1,163 @@
+.stepper {
+  flex: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.inner {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-3) var(--space-4) var(--space-4);
+}
+
+.caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+  font-size: var(--fs-sm);
+}
+
+.count {
+  color: var(--text-muted);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+}
+
+.activeLabel {
+  font-weight: var(--fw-bold);
+  color: var(--primary);
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.trackWrap {
+  position: relative;
+}
+
+.track {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rail {
+  position: absolute;
+  top: 13px;
+  left: 14px;
+  right: 14px;
+  height: 3px;
+  border-radius: var(--radius-full);
+  background: var(--border);
+  overflow: hidden;
+}
+
+.railFill {
+  display: block;
+  height: 100%;
+  background: var(--brand-gradient);
+  background-size: calc(100vw) 100%;
+  border-radius: inherit;
+  transition: width var(--dur-slow) var(--ease-out);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 28px;
+}
+
+.dot {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  background: var(--surface);
+  border: 2px solid var(--border-strong);
+  color: var(--text-subtle);
+  transition:
+    background-color var(--dur-base) ease,
+    border-color var(--dur-base) ease,
+    color var(--dur-base) ease,
+    transform var(--dur-base) var(--ease-out);
+}
+
+.done .dot {
+  background: var(--success);
+  border-color: var(--success);
+  color: #fff;
+}
+
+.current .dot {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+  transform: scale(1.12);
+  box-shadow: 0 0 0 5px var(--primary-soft);
+}
+
+/* Di HP label per titik disembunyikan; label aktif tampil di caption. */
+.label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .inner {
+    padding-bottom: var(--space-3);
+  }
+
+  .caption {
+    display: none;
+  }
+
+  /* Lebar tetap per langkah agar garis mulai/berakhir tepat di tengah titik. */
+  .step {
+    width: 92px;
+  }
+
+  .rail {
+    left: 46px;
+    right: 46px;
+  }
+
+  .label {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+    max-width: 92px;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
+    color: var(--text-muted);
+    text-align: center;
+    line-height: 1.3;
+    white-space: normal;
+  }
+
+  .current .label {
+    color: var(--primary);
+    font-weight: var(--fw-bold);
+  }
+
+  .done .label {
+    color: var(--text);
+  }
+}

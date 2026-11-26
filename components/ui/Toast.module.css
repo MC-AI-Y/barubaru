@@ -1,0 +1,114 @@
+.region {
+  position: fixed;
+  z-index: 400; /* di atas panel detail (150), dialog (200), dan foto (300) — v5.2 */
+  left: 50%;
+  bottom: calc(96px + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  width: min(calc(100% - 24px), 440px);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  pointer-events: auto;
+  animation: toast-in var(--dur-base) var(--ease-out);
+}
+
+.leaving {
+  animation: toast-out 220ms ease forwards;
+}
+
+.icon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.message {
+  flex: 1;
+  padding-top: 3px;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
+}
+
+.close {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-subtle);
+  cursor: pointer;
+}
+
+.close:hover {
+  background: var(--surface-muted);
+  color: var(--text);
+}
+
+.info {
+  border-left-color: var(--brand-blue);
+}
+.info .icon {
+  background: var(--brand-blue-soft);
+  color: var(--brand-blue-strong);
+}
+
+.success {
+  border-left-color: var(--brand-green);
+}
+.success .icon {
+  background: var(--brand-green-soft);
+  color: var(--brand-green-strong);
+}
+
+.warning {
+  border-left-color: var(--brand-orange);
+}
+.warning .icon {
+  background: var(--brand-orange-soft);
+  color: var(--brand-orange-strong);
+}
+
+.error {
+  border-left-color: var(--brand-pink);
+}
+.error .icon {
+  background: var(--brand-pink-soft);
+  color: var(--brand-pink-strong);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes toast-out {
+  to {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}

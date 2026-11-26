@@ -1,0 +1,121 @@
+.shell {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Satu-satunya area yang boleh scroll: isi layar yang panjang. */
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.content {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4) var(--space-8);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.centered {
+  min-height: 100%;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.centered .heading {
+  align-items: center;
+}
+
+.leading {
+  display: flex;
+  justify-content: center;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.eyebrow {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+}
+
+.title {
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.01em;
+}
+
+.title:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.description {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.actionBar {
+  flex: none;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border);
+  padding: var(--space-3) var(--space-4);
+  padding-bottom: max(var(--space-3), env(safe-area-inset-bottom));
+}
+
+.actions {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  display: flex;
+  gap: var(--space-3);
+}
+
+/* Tombol di bilah aksi berbagi lebar; tombol utama paling kanan. */
+.actions > * {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.actions > *:last-child:not(:first-child) {
+  flex-grow: 1.7;
+}
+
+@media (min-width: 768px) {
+  .content {
+    padding-top: var(--space-8);
+  }
+
+  .title {
+    font-size: var(--fs-2xl);
+  }
+
+  .description {
+    font-size: var(--fs-md);
+  }
+
+  .actions {
+    justify-content: flex-end;
+  }
+
+  .actions > *,
+  .actions > *:last-child:not(:first-child) {
+    flex: 0 0 auto;
+    min-width: 180px;
+  }
+}

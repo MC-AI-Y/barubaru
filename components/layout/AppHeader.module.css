@@ -1,0 +1,89 @@
+.header {
+  position: relative;
+  flex: none;
+  height: var(--header-h);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  z-index: 10;
+}
+
+.inner {
+  height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  padding-left: max(var(--space-4), env(safe-area-inset-left));
+  padding-right: max(var(--space-4), env(safe-area-inset-right));
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.brandBtn {
+  margin: 0 calc(-1 * var(--space-2));
+  padding: var(--space-1, 4px) var(--space-2);
+  min-height: 44px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.brandBtn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.brandBtn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.brandBtn:disabled {
+  cursor: default;
+}
+
+.divider {
+  width: 1px;
+  height: 22px;
+  background: var(--border-strong);
+}
+
+.appName {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-md);
+  letter-spacing: 0.02em;
+  color: var(--text);
+  white-space: nowrap;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.stripe {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 3px;
+  background: var(--brand-gradient);
+}
+
+@media (max-width: 340px) {
+  .divider,
+  .appName {
+    display: none;
+  }
+}
