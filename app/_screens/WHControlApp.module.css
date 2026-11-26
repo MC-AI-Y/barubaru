@@ -1,0 +1,79 @@
+.app {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.screen {
+  position: absolute;
+  inset: 0;
+}
+
+.forward {
+  animation: screen-in-forward var(--dur-base) var(--ease-out) both;
+}
+
+.back {
+  animation: screen-in-back var(--dur-base) var(--ease-out) both;
+}
+
+.userChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 46vw;
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  background: var(--primary-soft);
+  color: var(--primary);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  min-height: 36px;
+  border: 0;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.userChip:hover:not(:disabled) {
+  filter: brightness(0.96);
+}
+
+.userChip:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.userChip:disabled {
+  cursor: default;
+}
+
+.userName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .userChip {
+    max-width: 320px;
+  }
+}
+
+.storageWarn {
+  flex: none;
+  padding: var(--space-2) var(--space-4);
+  background: var(--warning-soft);
+  color: var(--warning);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-align: center;
+}

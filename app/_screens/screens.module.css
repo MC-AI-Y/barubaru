@@ -1,0 +1,474 @@
+/* Gaya bersama untuk layar-layar laporan. */
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding-top: var(--space-2);
+}
+
+.formError {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  animation: fade-up var(--dur-fast) var(--ease-out);
+}
+
+.formError svg {
+  flex: none;
+  margin-top: 1px;
+}
+
+.note {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--brand-blue-soft);
+  color: var(--brand-blue-strong);
+  font-size: var(--fs-sm);
+}
+
+.note svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+/* ── Layar proses kirim ───────────────────────────────── */
+.progressCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.progressHead {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-weight: var(--fw-semibold);
+}
+
+.progressPct {
+  font-variant-numeric: tabular-nums;
+  color: var(--primary);
+}
+
+.progressBar {
+  height: 10px;
+  border-radius: var(--radius-full);
+  background: var(--surface-muted);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--brand-gradient);
+  transition: width 120ms linear;
+}
+
+.taskList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.task {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-size: var(--fs-sm);
+  color: var(--text-subtle);
+  transition: color var(--dur-base) ease;
+}
+
+.taskIcon {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  color: #fff;
+  transition:
+    background-color var(--dur-base) ease,
+    border-color var(--dur-base) ease;
+}
+
+.taskActive {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+}
+
+.taskActive .taskIcon {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.taskDone {
+  color: var(--text);
+}
+
+.taskDone .taskIcon {
+  background: var(--success);
+  border-color: var(--success);
+}
+
+/* ── Layar selesai ────────────────────────────────────── */
+.doneBadge {
+  margin-bottom: var(--space-3);
+  display: grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: var(--success-soft);
+  color: var(--success);
+  box-shadow: 0 0 0 10px rgba(128, 172, 21, 0.1);
+  animation: pop var(--dur-slow) var(--ease-out) both;
+}
+
+
+@keyframes pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  70% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ── Laporan: kartu, daftar, foto ─────────────────────── */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.photoCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.photoLarge {
+  width: 100%;
+  max-height: 46dvh;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  background: #0b0f16;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: var(--fs-sm);
+  color: var(--text-muted);
+}
+
+.metaRow {
+  display: flex;
+  gap: var(--space-2);
+  align-items: flex-start;
+}
+
+.metaRow svg {
+  flex: none;
+  margin-top: 2px;
+  color: var(--primary);
+}
+
+.emptyPhoto {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8) var(--space-4);
+  text-align: center;
+  border: 2px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.emptyIcon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: var(--brand-pink-soft);
+  color: var(--brand-pink-strong);
+}
+
+.banner {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--fs-sm);
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.banner svg {
+  flex: none;
+  margin-top: 2px;
+}
+
+.bannerBody {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.linkBtn {
+  align-self: flex-start;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--primary);
+  font-weight: var(--fw-semibold);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.grid2 {
+  display: grid;
+  gap: var(--space-5);
+}
+
+@media (min-width: 640px) {
+  .grid2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.cartBtn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 44px;
+  padding: 0 var(--space-4);
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-full);
+  background: var(--surface);
+  font-weight: var(--fw-semibold);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+}
+
+.badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 6px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: #fff;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+}
+
+.editTag {
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  background: var(--brand-orange-soft);
+  color: var(--brand-orange-strong);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+}
+
+.photoSlot {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.photoSlotImg {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: #0b0f16;
+}
+
+.hintText {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  padding: var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+}
+
+.itemBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.itemTitle {
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  word-break: break-word;
+}
+
+.itemSub {
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+.itemWarn {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--danger);
+}
+
+.itemActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.smallBtn {
+  min-height: 44px;
+  min-width: 64px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  cursor: pointer;
+}
+
+.smallBtnDanger {
+  color: var(--danger);
+  border-color: rgba(200, 0, 81, 0.35);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px var(--space-4);
+  font-size: var(--fs-sm);
+}
+
+.summary dt {
+  color: var(--text-muted);
+}
+
+.summary dd {
+  margin: 0;
+  font-weight: var(--fw-semibold);
+  word-break: break-word;
+}
+
+.cardHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.cardTitle {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+}
+
+.errorBox {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.resumeCard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.thumbPlaceholder {
+  display: block;
+  width: 72px;
+  height: 54px;
+  flex: none;
+  border-radius: var(--radius-sm);
+  border: 2px dashed var(--danger);
+  background: var(--danger-soft);
+}
+
+.downloadLink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 52px;
+  padding: 6px var(--space-4);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+  text-decoration: none;
+}
+
+.downloadLink:hover {
+  background: var(--surface-muted);
+}
